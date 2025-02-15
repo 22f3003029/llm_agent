@@ -2,15 +2,22 @@ from datetime import datetime
 from pathlib import Path
 from inspect import Parameter
 import inspect
+import os
+from openai import OpenAI
 
 ROOT_PATH = Path(__file__).parent.parent.absolute()
 
 DEBUG = True  # set to False when running in docker
 
-def get_path(input_path: str, debug=True) -> Path:
-    if debug: 
+AIPROXY_TOKEN = os.environ["AIPROXY_TOKEN"]
+
+client = OpenAI(api_key=AIPROXY_TOKEN, base_url="https://aiproxy.sanand.workers.dev/openai/v1/")
+
+def get_path(input_path: str) -> Path:
+    if DEBUG: 
         return Path(f"{str(ROOT_PATH) + input_path}")
-    return input_path
+    print(f"{input_path=}")
+    return Path(input_path)
 
 
 # Reference function_to_json from OpenAI's Swarm Library, MIT License

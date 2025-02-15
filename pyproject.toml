@@ -5,7 +5,16 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
+    "beautifulsoup4>=4.13.3",
+    "faker>=36.1.1",
     "fastapi>=0.115.8",
+    "gitpython>=3.1.44",
+    "numpy>=2.2.3",
     "openai>=1.63.0",
+    "pandas>=2.2.3",
+    "pillow>=11.1.0",
+    "python-dateutil>=2.9.0.post0",
+    "requests>=2.32.3",
+    "uv>=0.6.0",
     "uvicorn>=0.34.0",
 ]

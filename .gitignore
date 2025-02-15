@@ -4,3 +4,7 @@ dist/
 secrets.env
 
 data/
+
+*.egg-info
+**/__pycache__
+*pyc

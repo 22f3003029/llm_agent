@@ -1,10 +1,10 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 import os
 from openai import OpenAI
 import subprocess
 from .tools import tools
-from .utils import get_path, DEBUG
-
+from .utils import get_path, DEBUG, client, AIPROXY_TOKEN
+from fastapi.responses import PlainTextResponse
 """
 During Setup:
 
@@ -13,10 +13,6 @@ During Setup:
 """
 
 app = FastAPI()
-
-AIPROXY_TOKEN = os.environ["AIPROXY_TOKEN"]
-
-client = OpenAI(api_key=AIPROXY_TOKEN, base_url="https://aiproxy.sanand.workers.dev/openai/v1/")
 
 def get_params(tools: list[dict], messages: list[dict]) -> dict:
     return {
@@ -28,7 +24,15 @@ def get_params(tools: list[dict], messages: list[dict]) -> dict:
 
 def get_completion(task: str):
 
-    params = get_params(tools=[tool["tool"] for tool in tools.values()], messages=[{"role": "user", "content": task}])
+    params = get_params(tools=[tool["tool"] for tool in tools.values()], 
+        messages=[
+        {"role": "system", "content": """
+You are a smart intellegent assistant with tools to handle the user's request. 
+
+"""},
+        {"role": "user", "content": task}
+
+        ])
     return client.chat.completions.create(
         **params
     )
@@ -38,12 +42,13 @@ import json
 def handle_completion(completion):
     tool_calls = completion.choices[0].message.tool_calls
     print(f"{tool_calls=}")
-    for tool_call in tool_calls:
+    for tool_call in tool_calls[:1]:  # only do the first call, and not others
         func_name = tool_call.function.name
         func_args = json.loads(tool_call.function.arguments)
         func = tools[func_name]["func"]
         func(**func_args)
     # no return
+
 
 @app.get("/")
 async def root():
@@ -58,12 +63,13 @@ async def run(task: str):
     return 200
 
 
-@app.get("/read")
+@app.get("/read", response_class=PlainTextResponse)
 async def read(path: str):
-    path = get_path(input_path=path, debug=DEBUG)
+    path = get_path(input_path=path)
 
     if path.exists():
         with open(path, "r") as f:
             return f.read()
     else:
-        return 404
+        print(f"{DEBUG=}, {path=}")
+        raise HTTPException(status_code=404)
