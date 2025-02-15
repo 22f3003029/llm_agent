@@ -29,7 +29,7 @@ from llm_agent.datagen import (
     get_tickets,
 )
 
-from llm_agent.utils import get_path, DEBUG
+from llm_agent.utils import get_path
 
 openai_api_base = os.getenv(
     "OPENAI_API_BASE", "https://aiproxy.sanand.workers.dev/openai/v1"
@@ -244,9 +244,9 @@ async def a10(email, **kwargs):
 
 async def main(email: str):
     score, total = 0, 0
-    # for task in [a1, a2, a3, a4, a5, a6, a7, a8, a9, a10]:
+    for task in [a1, a2, a3, a4, a5, a6, a7, a8, a9, a10]:
     # for task in [a1]:
-    for task in [a6]:
+    # for task in [a3]:
         total += 1
         try:
             success = await task(email=email)

@@ -7,14 +7,13 @@ from openai import OpenAI
 
 ROOT_PATH = Path(__file__).parent.parent.absolute()
 
-DEBUG = True  # set to False when running in docker
-
 AIPROXY_TOKEN = os.environ["AIPROXY_TOKEN"]
+MODE = os.environ.get("MODE", "")
 
 client = OpenAI(api_key=AIPROXY_TOKEN, base_url="https://aiproxy.sanand.workers.dev/openai/v1/")
 
 def get_path(input_path: str) -> Path:
-    if DEBUG: 
+    if MODE == "debug": 
         return Path(f"{str(ROOT_PATH) + input_path}")
     print(f"{input_path=}")
     return Path(input_path)

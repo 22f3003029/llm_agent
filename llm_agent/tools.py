@@ -1,5 +1,5 @@
 import subprocess
-from .utils import function_to_chat_completion_params_tools, get_path, DEBUG, client, AIPROXY_TOKEN
+from .utils import function_to_chat_completion_params_tools, get_path, MODE, client, AIPROXY_TOKEN
 from datetime import datetime
 from dateutil.parser import parse
 import json
@@ -119,7 +119,7 @@ def create_index_from_markdown_files(dir_path: str, output_path: str):
     index = {}
     for file in files:
         heading = get_markdown_heading(file)
-        index[str(file.relative_to(get_path("/data/docs/")) if DEBUG else "./data/docs/")] = heading
+        index[str(file.relative_to(get_path("/data/docs/")))] = heading
     print(index)
     with open(output_path, "w") as f:
         json.dump(index, f)
@@ -344,10 +344,10 @@ tools = {
         "tool": function_to_chat_completion_params_tools(get_similar_comments),
         "func": get_similar_comments,
     },
-    "fetch_api_data": {
-        "tool": function_to_chat_completion_params_tools(fetch_api_data),
-        "func": fetch_api_data,
-    },
+    # "fetch_api_data": {
+    #     "tool": function_to_chat_completion_params_tools(fetch_api_data),
+    #     "func": fetch_api_data,
+    # },
     "clone_git_and_commit": {
         "tool": function_to_chat_completion_params_tools(clone_git_and_commit),
         "func": clone_git_and_commit,

@@ -3,7 +3,7 @@ import os
 from openai import OpenAI
 import subprocess
 from .tools import tools
-from .utils import get_path, DEBUG, client, AIPROXY_TOKEN
+from .utils import get_path, MODE, client, AIPROXY_TOKEN
 from fastapi.responses import PlainTextResponse
 """
 During Setup:
@@ -71,5 +71,5 @@ async def read(path: str):
         with open(path, "r") as f:
             return f.read()
     else:
-        print(f"{DEBUG=}, {path=}")
+        print(f"{MODE=}, {path=}")
         raise HTTPException(status_code=404)
