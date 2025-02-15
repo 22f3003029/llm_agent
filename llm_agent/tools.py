@@ -166,7 +166,7 @@ def extract_credit_card_number(input_path: str, output_path: str):
             {
                 "role": "user",
                 "content": [
-                    {"type": "text", "text": "Extract the numbers from this image. Return only the number without spaces."},
+                    {"type": "text", "text": "There are multiple numbers in the image. Extract the main longest sequence of number. Return only the number without spaces."},
                     {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{base64_image}"}}
                 ]
             }
